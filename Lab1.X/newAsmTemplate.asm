@@ -11,10 +11,10 @@ Initial:
 
 ;***************************************
 start:
-				; Write your assembly code HERE 
+                        ; Write your assembly code HERE 
     INCF LATD, 1, 0		; increase LATD
     MOVLW 0x22    		; move literal to WREG     	
-    ADDWF WREG, 0, 0		; add the value of f to WREG
+    ADDWF WREG, 0, 0	; add the value of f to WREG
     ADDLW 0x2E    		; add the value to WREG
     CLRF WREG   		; clear WREG
     
