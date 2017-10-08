@@ -21,3 +21,6 @@ funclist
 **/Makefile-*
 disassembly/
 *.map
+
+# c
+*.stackdump
