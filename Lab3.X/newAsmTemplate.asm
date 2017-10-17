@@ -33,6 +33,7 @@ loop:
     INCF WREG           ; WREG = WREG + 1
     ADDWF LATA          ; LATA = LATA + WREG
     BNOV loop           ; if overflow bit != 1 continue loop
+                        ; why overflow? LATA became negative(leftmost bit = 1)
     BNC 0x32            ; if carry != 1, goto Rotate
     NOP
     NOP
