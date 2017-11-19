@@ -19,24 +19,35 @@ LIST p=18f4520
 ;****	The Main program start from here
 ;********************************************************************
 Main:
-    dis     equ 0x01
     index   equ 0x00
+    dis     equ 0x01
+    ans     equ 0x02
+    
 
-    MOVLW   0x5
+    MOVLW   d'40'           ; set distance 1 ~ 255
     MOVWF   dis, 1
 
     CALL    Init_TABLE
-    MOVLW   0x5
+    MOVLW   0x90
     MOVWF   index
 
 loop:
     TBLRD*+
-    ANDWF   TABLAT
+    MOVF    dis, 0
+    SUBWF   TABLAT, 0
+    BN      next
+    BRA     answer
 
 next:
     DECFSZ  index
     BRA     loop
     NOP
+
+answer:
+    MOVLW   0x90
+    MOVWF   ans
+    MOVF    index, 0
+    SUBWF   ans, 1
     
 ;***********************************************************************
 ;****   Initialize table
