@@ -15,40 +15,6 @@ LIST p=18f4520
     org		0x0000
     BRA		Main
 
-;********************************************************************
-;****	The Main program start from here
-;********************************************************************
-Main:
-    index   equ 0x00
-    dis     equ 0x01
-    ans     equ 0x02
-    
-
-    MOVLW   d'40'           ; set distance 1 ~ 255
-    MOVWF   dis, 1
-
-    CALL    Init_TABLE
-    MOVLW   0x90
-    MOVWF   index
-
-loop:
-    TBLRD*+
-    MOVF    dis, 0
-    SUBWF   TABLAT, 0
-    BN      next
-    BRA     answer
-
-next:
-    DECFSZ  index
-    BRA     loop
-    NOP
-
-answer:
-    MOVLW   0x90
-    MOVWF   ans
-    MOVF    index, 0
-    SUBWF   ans, 1
-    
 ;***********************************************************************
 ;****   Initialize table
 ;***********************************************************************
@@ -61,6 +27,38 @@ Init_TABLE:
     MOVWF   TBLPTRL
     RETURN
 
+;********************************************************************
+;****	The Main program start from here
+;********************************************************************
+Main:
+    index   equ 0x00
+    dis     equ 0x01
+    ans     equ 0x02
+    
+    MOVLW   d'129'           ; set distance 1 ~ 255
+    MOVWF   dis, 1
+
+    CALL    Init_TABLE
+    MOVLW   d'90'
+    MOVWF   index
+
+loop:
+    TBLRD*+
+    MOVF    dis, 0
+    CPFSLT  TABLAT
+    BRA     answer
+
+next:
+    DECFSZ  index
+    BRA     loop
+    NOP
+
+answer:
+    MOVLW   d'90'
+    MOVWF   ans
+    MOVF    index, 0
+    SUBWF   ans, 1
+    
 ;***********************************************************************
 ;****   256 * sin2θ table
 ;***********************************************************************
