@@ -10,15 +10,15 @@ LIST p=18f4520
     ; Watchdog Timer Enable bit (WDT disabled (control is placed on the SWDTEN bit))
 
 ;********************************************************************
-;****	Reset vector
+;****	Set vector
 ;********************************************************************
     org		0x0000
     BRA		Main
 
 ;***********************************************************************
-;****   Initialize table
+;****   Initialize table pointer and ans value
 ;***********************************************************************
-Init_TABLE_st45:    
+Init_TABLE_st45:           ; 1 ~ 181
     MOVLW   upper sintable
     MOVWF   TBLPTRU
     MOVLW   high sintable
@@ -28,7 +28,7 @@ Init_TABLE_st45:
     CLRF    ans             ; let ans initialize to 0
     RETURN
 
-Init_TABLE_gt45:
+Init_TABLE_gt45:           ; 182 ~ 255 
     CALL    Init_TABLE_st45
     MOVLW   d'45'
     ADDWF   TBLPTRL, 1      ; read table from middle of table
@@ -39,21 +39,17 @@ Init_TABLE_gt45:
 ;****	The Main program start from here
 ;********************************************************************
 Main:
-    index   equ 0x00
     dis     equ 0x01
     ans     equ 0x02
     
-    MOVLW   d'255'           ; set distance 1 ~ 255
+    MOVLW   d'183'           ; set distance here (1 ~ 255)
     MOVWF   dis, 1
 
     MOVLW   d'182'
-    CPFSLT  dis
-    CALL    Init_TABLE_gt45
+    CPFSLT  dis             ; compare distance to call correspondent init
+    CALL    Init_TABLE_gt45 ; distance greater than 182
     CPFSGT  dis
-    CALL    Init_TABLE_st45
-    
-    MOVLW   d'90'
-    MOVWF   index
+    CALL    Init_TABLE_st45 ; distance less than 182
     
 loop:
     TBLRD*+
@@ -63,13 +59,36 @@ loop:
 
 next:
     INCF    ans
-    DECFSZ  index
     BRA     loop
     NOP
 
 answer:
-    NOP
-    goto    answer
+    MOVLW   d'0'
+    CPFSEQ  ans             ; if ans = 0, represent that ans is the smallest
+    RCALL   find_near
+    BRA     stop
+
+stop:
+    NOP                     ; set breakpoint here to check answer
+    goto    stop
+
+;***********************************************************************
+;****   Find the closest answer
+;***********************************************************************
+find_near:
+    MOVF    dis, 0
+    MOVFF   TABLAT, LATA
+    SUBWF   LATA, 1         ; A = sintable(t) - dis
+    TBLRD*-
+    TBLRD*-
+    TBLRD*
+    MOVF    TABLAT, 0
+    MOVFF   dis, LATB
+    SUBWF   LATB, 1         ; B = dis - sintable(t-1)
+    MOVF    LATA, 0
+    CPFSGT  LATB            ; compare A with B
+    DECF    ans
+    RETURN
     
 ;***********************************************************************
 ;****   256 * sin2θ table
