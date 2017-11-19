@@ -39,10 +39,10 @@ Init_TABLE_gt45:           ; 182 ~ 255
 ;****	The Main program start from here
 ;********************************************************************
 Main:
-    dis     equ 0x01
-    ans     equ 0x02
+    dis     EQU 0x01
+    ans     EQU 0x02
     
-    MOVLW   d'183'           ; set distance here (1 ~ 255)
+    MOVLW   d'20'          ; set distance here (1 ~ 255)
     MOVWF   dis, 1
 
     MOVLW   d'182'
@@ -50,11 +50,11 @@ Main:
     CALL    Init_TABLE_gt45 ; distance greater than 182
     CPFSGT  dis
     CALL    Init_TABLE_st45 ; distance less than 182
-    
-loop:
-    TBLRD*+
     MOVF    dis, 0
-    CPFSLT  TABLAT
+
+loop:                       ; loop for reading value from sintable
+    TBLRD*+
+    CPFSLT  TABLAT          ; if sintable(i) >= dis then break loop
     BRA     answer
 
 next:
@@ -65,7 +65,7 @@ next:
 answer:
     MOVLW   d'0'
     CPFSEQ  ans             ; if ans = 0, represent that ans is the smallest
-    RCALL   find_near
+    RCALL   find_close
     BRA     stop
 
 stop:
@@ -75,18 +75,18 @@ stop:
 ;***********************************************************************
 ;****   Find the closest answer
 ;***********************************************************************
-find_near:
+find_close:
     MOVF    dis, 0
     MOVFF   TABLAT, LATA
-    SUBWF   LATA, 1         ; A = sintable(t) - dis
+    SUBWF   LATA, 1         ; A = sintable(i) - dis
     TBLRD*-
     TBLRD*-
     TBLRD*
     MOVF    TABLAT, 0
     MOVFF   dis, LATB
-    SUBWF   LATB, 1         ; B = dis - sintable(t-1)
+    SUBWF   LATB, 1         ; B = dis - sintable(i-1)
     MOVF    LATA, 0
-    CPFSGT  LATB            ; compare A with B
+    CPFSGT  LATB            ; if A < B then ans--
     DECF    ans
     RETURN
     
