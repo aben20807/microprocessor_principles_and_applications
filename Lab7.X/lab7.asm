@@ -58,12 +58,10 @@ LIST p=18f4520
 ;********************************************************************
 ;****	RESET Vector @ 0x0000
 ;********************************************************************
-    org		0x0000 		;  
+    org		0x0000 		;
     BRA		Main
 
-    org		0x0008		; 
-    ;call Hi_ISRs,FAST
-    ;retfie  FAST
+    org		0x0008		;
     BRA		Hi_ISRs
     
 ;********************************************************************
@@ -73,10 +71,10 @@ LIST p=18f4520
 Main:
     CALL    Init_IO
     CALL    Init_INT0
-    BSF     RCON, IPEN                   ; Enable Interrupt priority
-    BSF     INTCON, GIEH                 ; Enable all High Priority Interrupt
+    BSF     RCON, IPEN      ; Enable Interrupt priority
+    BSF     INTCON, GIEH    ; Enable all High Priority Interrupt
 
-Null_Loop	GOTO	Null_Loop		; Do loop here
+Null_Loop GOTO Null_Loop	; Do loop here
 
 ;***********************************************************************
 ;****		Initial the PORTD for the output port 
@@ -104,7 +102,7 @@ Init_INT0:
     L1  EQU 0X14
     L2  EQU 0X15
 DELAY MACRO num1,num2
-    local LOOP1         ;prevent compile error
+    local LOOP1             ;prevent compile error
     local LOOP2               
     MOVLW num2
     MOVWF L2
@@ -127,9 +125,9 @@ DELAY MACRO num1,num2
 ;***************************************************************************************
 Hi_ISRs
     NOP
-    BCF		INTCON, INT0IF      ; Clear Interrupt flag
+    BCF		INTCON, INT0IF  ; Clear Interrupt flag
     BSF     LATD, 0, 0
     DELAY   0x4f, 0x4f
     CLRF    LATD
-    RETFIE  FAST                ; Return with shadow register
+    RETFIE  FAST            ; Return with shadow register
     END
