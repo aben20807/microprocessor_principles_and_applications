@@ -18,13 +18,21 @@ LIST p=18f4520
 ;***********************************************************************
 ;****   Initialize table
 ;***********************************************************************
-Init_TABLE:    
+Init_TABLE_st45:    
     MOVLW   upper sintable
     MOVWF   TBLPTRU
     MOVLW   high sintable
     MOVWF   TBLPTRH
     MOVLW   low sintable
     MOVWF   TBLPTRL
+    CLRF    ans             ; let ans initialize to 0
+    RETURN
+
+Init_TABLE_gt45:
+    CALL    Init_TABLE_st45
+    MOVLW   d'45'
+    ADDWF   TBLPTRL, 1      ; read table from middle of table
+    ADDWF   ans, 1          ; let ans initialize to 45
     RETURN
 
 ;********************************************************************
@@ -35,13 +43,18 @@ Main:
     dis     equ 0x01
     ans     equ 0x02
     
-    MOVLW   d'129'           ; set distance 1 ~ 255
+    MOVLW   d'255'           ; set distance 1 ~ 255
     MOVWF   dis, 1
 
-    CALL    Init_TABLE
+    MOVLW   d'182'
+    CPFSLT  dis
+    CALL    Init_TABLE_gt45
+    CPFSGT  dis
+    CALL    Init_TABLE_st45
+    
     MOVLW   d'90'
     MOVWF   index
-
+    
 loop:
     TBLRD*+
     MOVF    dis, 0
@@ -49,15 +62,14 @@ loop:
     BRA     answer
 
 next:
+    INCF    ans
     DECFSZ  index
     BRA     loop
     NOP
 
 answer:
-    MOVLW   d'90'
-    MOVWF   ans
-    MOVF    index, 0
-    SUBWF   ans, 1
+    NOP
+    goto    answer
     
 ;***********************************************************************
 ;****   256 * sin2θ table
