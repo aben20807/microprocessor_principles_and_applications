@@ -3,6 +3,10 @@ Microprocessor Principles and Applications class record
 ## review
 + C codes about using linked list and stack.
 
+## HW01
++ Use sine table to compute degree.
++ Detailed process see [here](https://github.com/aben20807/microprocessor_principles_and_applications/blob/master/HW01.X/F74046284_HW1_report.pdf).
+
 ## Lab1
 + Simple addition.
 
@@ -26,3 +30,16 @@ Microprocessor Principles and Applications class record
 + main.asm:     Bubble sort with calling subroutine.
 + lab4mac.asm:  Check sorted result correctness. SWAP macro.
 + Notice that cannot skip whole macro, let macro be in a subroutine.
+
+## Lab5
++ Lab5_1:
+    + Call and use assembly codes in C program.
+    + add function in .asm.
++ Lab5_2:
+    + Use Lab5_2_lib.h to implement add, sub to number.
+
+## Lab6
++ Use RA4 to detect button to control PORTD led blinking.
+
+## Lab7
++ Use high priority ISR to handle interrupt when clicking button.
