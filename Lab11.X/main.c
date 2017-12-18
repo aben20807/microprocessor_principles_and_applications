@@ -103,16 +103,14 @@ void ISR_Init()
 void MyusartRead()
 {
     mychar = RCREG;
-    if(mychar == 'x'){ // if input error enter 'x' to clear stringC
-        stringC = 0;
-        return ;
-    }
     if(stringC < 8){
         mystring[stringC++] = mychar;
     }
-    else{
-        stringC = 0;
-        mystring[stringC++] = mychar;
+    else{   // when input > 8 use shift to handle mystring
+        for(int i = 0; i < 7; i++){
+            mystring[i] = mystring[i+1];
+        }
+        mystring[7] = mychar;
     }
     if(mystring[0] == 'C' && mystring[1] == 'o' &&
                 mystring[2] == 'n' && mystring[3] == 't' &&
