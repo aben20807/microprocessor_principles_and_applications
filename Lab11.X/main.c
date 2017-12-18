@@ -71,6 +71,7 @@
 #include <pic18f4520.h>
 // easy ring buffer 
 char mystring[8];
+char mychar;
 int stringC = 0;
 
 //Some easy function(init...etc)
@@ -78,7 +79,7 @@ void Myusartwrite(char);
 void MyusartRead();
 void Myusartinit();
 void ISR_Init();
-void Mylab10_2();
+void Mylab11_2();
 
 void main(void) {
     
@@ -87,9 +88,7 @@ void main(void) {
     while(1)
     {
         //TODO 
-//        if(????)
-//            Mylab10_2();
-        
+        // Mylab11_2();
     }
     return;
     
@@ -103,7 +102,23 @@ void ISR_Init()
 }
 void MyusartRead()
 {
-    mystring[0] = RCREG;
+    mychar = RCREG;
+    if(mychar == 'x'){ // if input error enter 'x' to clear stringC
+        stringC = 0;
+        return ;
+    }
+    if(stringC < 8){
+        mystring[stringC++] = mychar;
+    }
+    else{
+        stringC = 0;
+        mystring[stringC++] = mychar;
+    }
+    if(mystring[0] == 'C' && mystring[1] == 'o' &&
+                mystring[2] == 'n' && mystring[3] == 't' &&
+                mystring[4] == 'r' && mystring[5] == 'o' &&
+                mystring[6] == 'l')
+            Mylab11_2();
     return ;
 }
 void Myusartwrite(char a)
@@ -153,11 +168,24 @@ void Myusartinit()
     PIE1bits.RCIE = 1;              //Rx interrupt
     IPR1bits.RCIP = 1;              //Setting Rc as high/low priority interrupt
     
+    // LED init
+    TRISDbits.RD0 = 0;
+    TRISDbits.RD1 = 0;
+    PORTDbits.RD0 = 0;
+    PORTDbits.RD1 = 0;
+    
     return ;
 }
-void Mylab10_2()
+void Mylab11_2()
 {
-    /*TODO*/
+    if(mystring[7] == '1')
+        PORTDbits.RD0 = 1;
+    if(mystring[7] == '2')
+        PORTDbits.RD0 = 0;
+    if(mystring[7] == '3')
+        PORTDbits.RD1 = 1;
+    if(mystring[7] == '4')
+        PORTDbits.RD1 = 0;
     
     return ;
 }
@@ -179,7 +207,7 @@ void interrupt  Hi_ISR(void)
             */
         }
         MyusartRead();
-        Myusartwrite(mystring[0]);
+        Myusartwrite(mychar);
     }
     
     return ;
