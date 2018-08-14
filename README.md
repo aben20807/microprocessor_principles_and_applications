@@ -7,6 +7,12 @@ Microprocessor Principles and Applications class record
 + Use sine table to compute degree.
 + Detailed process see [here](https://github.com/aben20807/microprocessor_principles_and_applications/blob/master/HW01.X/F74046284_HW1_report.pdf).
 
+## Hands\_on\_1
++ morse code for midterm exam.
+
+## final project
++ see here:[https://github.com/siahuat0727/TransLove](https://github.com/siahuat0727/TransLove)
+
 ## Lab1
 + Simple addition.
 
@@ -32,14 +38,30 @@ Microprocessor Principles and Applications class record
 + Notice that cannot skip whole macro, let macro be in a subroutine.
 
 ## Lab5
-+ Lab5_1:
++ Lab5\_1:
     + Call and use assembly codes in C program.
     + add function in .asm.
-+ Lab5_2:
-    + Use Lab5_2_lib.h to implement add, sub to number.
++ Lab5\_2:
+    + Use Lab5\_2\_lib.h to implement add, sub to number.
 
 ## Lab6
 + Use RA4 to detect button to control PORTD led blinking.
 
 ## Lab7
 + Use high priority ISR to handle interrupt when clicking button.
+
+## Lab8
++ Use timer to control LED.
++ Let port B be input button, and port D to output LED.
+
+## Lab9
++ Use PWM to control servo moter
+
+## Lab10
++ Connect three 300ohms resistors in series.
++ Use ADC (analog-to-digital converter) to measure voltage between resistors.
+
+## Lab11
++ Use UART to let terminal to control two LEDs on and off.
++ `$ Control1`: LED1 on, `$ Control2`: LED1 off
++ `$ Control3`: LED2 on, `$ Control4`: LED2 off
